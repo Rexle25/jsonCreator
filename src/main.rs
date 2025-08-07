@@ -5,7 +5,7 @@ use serde::{Serialize, Deserialize};
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct station {
         name: String,
-        pos: Option<Vec<String>>,
+        pos: Option<(f64, f64)>,
         #[serde(rename = "type")]
         typ: String,
         text: String,
@@ -40,9 +40,15 @@ fn main() {
             
             let mut name = setUserInput("Name eingeben");
 
-            let mut lat = setUserInput("Latitude eingeben");
-            let mut lon = setUserInput("Longitude eingeben");
-            let mut pos = Some(vec![lat, lon]);
+            let mut str_lat = setUserInput("Latitude eingeben");
+            let mut str_lon = setUserInput("Longitude eingeben");
+            let lat = str_lat.parse::<f64>().ok();
+            let lon = str_lon.parse::<f64>().ok();
+            let pos = if let (Some(lat), Some(lon)) = (lat, lon) {
+                Some((lat, lon))
+            } else {
+                None
+            };
 
             let mut typ = setUserInput("Typ eingeben");
 
